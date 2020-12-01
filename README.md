@@ -5,7 +5,7 @@ Code for the Principles and Practices of Remote Sensing MSc course. This is an i
 There are two jupyter notebooks
 
 * python\_foundations.ipynb
-* batch\_process\_answers.ipynb
+* batch\_process.ipynb
 
 
 ## python\_foundations.ipynb
@@ -14,7 +14,7 @@ Gives a brief overview of a few aspects of python.
 
 
 
-## batch\_process\_answers.ipynb
+## batch\_process.ipynb
 
 Provides some pre-written functions which can be used to process lidar data to make biomass. The notebook takes students through how to modify the code to batch process a large area and visualise the data.
 
