@@ -65,5 +65,5 @@ las <- func.load_las(file,tilewidth,tilebuffer)
 # classify ground points
 las <- func.classify_ground(las, classify_ground, outRoot)
 
-print('Data written to',outRoot)
+print(c('Data written to',outRoot))
 
