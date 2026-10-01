@@ -56,9 +56,9 @@ classify_ground[['params']][['sloop_smooth']] <- sloop_smooth         # Apply sl
 
 # load data and run
 ## Options for output files
-tile$width <- 0 # 0 for file by file processing, otherwise edgelength of square in las units (m )
-tile$buffer <- 30 # buffer around tile in las units (m)
-las <- func.load_las(file,tile$width,tile$buffer)
+tilewidth <- 0 # 0 for file by file processing, otherwise edgelength of square in las units (m )
+tilebuffer <- 30 # buffer around tile in las units (m)
+las <- func.load_las(file,tilewidth,tilebuffer)
 
 # classify ground points
 las <- func.classify_ground(las, classify_ground, outRoot)
