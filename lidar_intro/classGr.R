@@ -25,24 +25,26 @@ sloop_smooth <- TRUE    # apply slope smoothing
 
 # read command line
 args <- commandArgs(trailingOnly = TRUE)
-for(i in 1:length(args)){
-  if(args[i]=='-file'){
-    file <- args[i+1]
-    i <- i+1
-  }else if(args[i]=='-outRoot'){
-    outRoot <- args[i+1]
-    i <- i+1
-  }else if(args[i]=='-rigidness'){
-    rigidness <- args[i+1]
-    i <- i+1
-  }else if(args[i]=='-res'){
-    cloth_resolution <- args[i+1]
-    i <- i+1
-  }else if(args[i]=='-thresh'){
-    class_threshold<- args[i+1]
-    i <- i+1
-  }
-}# command lne parser
+if(length(args)>1){
+  for(i in 1:length(args)){
+    if(args[i]=='-file'){
+      file <- args[i+1]
+      i <- i+1
+    }else if(args[i]=='-outRoot'){
+      outRoot <- args[i+1]
+      i <- i+1
+    }else if(args[i]=='-rigidness'){
+      rigidness <- args[i+1]
+      i <- i+1
+    }else if(args[i]=='-res'){
+      cloth_resolution <- args[i+1]
+      i <- i+1
+    }else if(args[i]=='-thresh'){
+      class_threshold<- args[i+1]
+      i <- i+1
+    }
+  }# command line parser
+}
 
 
 # set algorithm type. CSF is cloth simulation filter
