@@ -18,7 +18,7 @@ source('/geos/netdata/pprs/lidar_intro/L2_lidar_processing/R/lidR_options.R')
 # defaults
 file <- '/geos/netdata/pprs//lidar_intro/ALS/raw/cardington.las'
 outRoot="./test"
-rigidness <- '2L'
+rigidness <- 2L
 cloth_resolution <- 0.5 # Cloth resolution (m)
 class_threshold <- 0.5  # Height threshold for ground classification (m)
 sloop_smooth <- TRUE    # apply slope smoothing
@@ -51,7 +51,7 @@ if(length(args)>1){
 classify_ground[['algorithm']] <- 'csf'
 
 # set parameters
-classify_ground[['params']][['rigidness']] <- rigidness               # Rigidity of cloth. Choose from 1L (soft), 2L (medium) and 3L (rigid)
+classify_ground[['params']][['rigidness']] <- c(rigidness)            # Rigidity of cloth. Choose from 1L (soft), 2L (medium) and 3L (rigid)
 classify_ground[['params']][['cloth_resolution']] <- cloth_resolution # Cloth resolution (m)
 classify_ground[['params']][['class_threshold']] <- class_threshold   # Height threshold for ground classification (m)
 classify_ground[['params']][['sloop_smooth']] <- sloop_smooth         # Apply slope smoothing?
