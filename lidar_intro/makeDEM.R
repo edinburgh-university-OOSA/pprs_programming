@@ -34,6 +34,7 @@ if(length(args)>1){
     }else if(args[i]=='-res'){
       resolution <- args[i+1]
       i <- i+1
+    }
   }# command line parser
 }
 
@@ -43,9 +44,10 @@ create_dtm[['res']] <- as.numeric(resolution) # Pixel width (m)
 create_dtm[['params']][['k']] <- 10L # k-nearest neighbours
 create_dtm[['params']][['rmax']] <- 5 # Search radius (m, ignored by 'kriging')
 
-create_chm[['algorithm']] = 'pitfree'
-create_chm[['res']] = as.numeric(resolution) ## CHM resolution (m)
-
+create_chm[['algorithm']] <- 'dsmtin'
+create_chm[['res']] <- as.numeric(resolution) ## CHM resolution (m)
+create_chm[['params']][['max_edge']]  <- 10
+create_chm[['params']][['highest']]  <- TRUE
 
 # load data and run
 ## Options for output files
@@ -55,5 +57,5 @@ las <- func.load_las(file,tilewidth,tilebuffer)
 
 # make DTM and DSM
 dtm <- func.create_dtm(las, create_dtm, outRoot)
-dsm <- func.create_dtm(las, create_chm, outRoot)
+dsm <- func.create_chm(las, create_chm, outRoot)
 
