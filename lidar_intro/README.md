@@ -3,7 +3,7 @@
 This practical demonstrates processing lidar data to make a DTM and DSM. It has two scripts:
 
 * classGr.R - classifies ground in a point cloud
-* makeDEM.R - products a DTM from a classified point cloud
+* makeDEM.R - produces a DTM and DSM from a classified point cloud
 
 
 ## Ground classification
@@ -24,7 +24,7 @@ It will output a new lidar file starting with outRoot, defined above. All values
 
 ## DTM generation
 
-Run the following command:
+Run the following command to produce a DTM and a DSM. Note that the DSM will have "chm" in the filename, but it is a DSM.
 
     Rscript makeDEM.R
 
