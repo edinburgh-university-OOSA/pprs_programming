@@ -38,9 +38,11 @@ if(length(args)>1){
   }# command line parser
 }
 
+print(resolution)
+
 # settings
 create_dtm[['algorithm']] <- 'tin'
-create_dtm[['res']] <- resolution # Pixel width (m)
+create_dtm[['res']] <- as.numeric(resolution) # Pixel width (m)
 create_dtm[['params']][['k']] <- 10L # k-nearest neighbours
 create_dtm[['params']][['rmax']] <- 5 # Search radius (m, ignored by 'kriging')
 
