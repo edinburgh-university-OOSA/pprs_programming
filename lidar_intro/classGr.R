@@ -37,10 +37,10 @@ if(length(args)>1){
       rigidness <- args[i+1]
       i <- i+1
     }else if(args[i]=='-res'){
-      cloth_resolution <- args[i+1]
+      cloth_resolution <- as.numeric(args[i+1])
       i <- i+1
     }else if(args[i]=='-thresh'){
-      class_threshold<- args[i+1]
+      class_threshold <- as.numeric(args[i+1])
       i <- i+1
     }
   }# command line parser
