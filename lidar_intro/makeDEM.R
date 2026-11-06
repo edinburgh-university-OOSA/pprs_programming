@@ -32,7 +32,7 @@ if(length(args)>1){
       outRoot <- args[i+1]
       i <- i+1
     }else if(args[i]=='-res'){
-      resolution <- args[i+1]
+      resolution <- as.numeric(args[i+1])
       i <- i+1
     }
   }# command line parser
