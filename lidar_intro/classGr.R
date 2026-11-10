@@ -12,8 +12,8 @@ path.split <- function(x) if (dirname(x)==x) x else c(basename(x),path.split(dir
 future::plan(future::multisession, workers = 4L)
 
 # these scripts call lidR commands
-source('/geos/netdata/pprs/lidar_intro/L2_lidar_processing/R/lidR_operations.R')
-source('/geos/netdata/pprs/lidar_intro/L2_lidar_processing/R/lidR_options.R')
+source('fsf_lidR/lidR_operations.R') #/geos/netdata/pprs/lidar_intro/L2_lidar_processing/R/lidR_operations.R')
+source('fsf_lidR/lidR_options.R')    # /geos/netdata/pprs/lidar_intro/L2_lidar_processing/R/lidR_options.R')
 
 # defaults
 file <- '/geos/netdata/pprs//lidar_intro/ALS/raw/cardington.las'
