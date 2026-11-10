@@ -1,0 +1,12 @@
+Warm up on GEE
+
+* Open an image
+* Make an average through time.
+* Batch some seasonal
+* Draw some polygons
+* do the classification
+* Accuracy assessment (QGIS?)
+* Add in complementary data (optical, seasonal, SAR and lidar texrture (GEDI L4D?))
+* Look at changes in accuracy and variable importance?
+
+
