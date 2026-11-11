@@ -3,7 +3,7 @@
 // Open the L4D collection
 var dataset = ee.ImageCollection('LARSE/GEDI/GEDI04_D_002');
 
-var visualization = {
+var height = {
   bands: ['rh98'],
     palette: [
     'darkred',
@@ -14,6 +14,11 @@ var visualization = {
   ]
 };
 
+var cov = {
+  bands: ['cover_z_000']
+};
+
 Map.setCenter(-3.9, 50.5, 8);
-Map.addLayer(dataset, visualization, 'Height');
+Map.addLayer(dataset, height, 'Height');
+Map.addLayer(dataset, cov, 'Cover');
 
