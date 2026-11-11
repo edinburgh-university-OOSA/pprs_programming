@@ -2,11 +2,11 @@
 
 
 // 1. Define your Region of Interest (ROI) or center the map
-Map.setCenter(-122.0877, 37.7880, 11);
+Map.setCenter(-3.9, 50.5, 8);
 
 // 2. Load and filter a satellite image collection (e.g., Landsat 8 Surface Reflectance)
 var l8Image = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2')
-  .filterDate('2021-03-01', '2021-07-01')
+  .filterDate('2026-05-01', '2026-09-01')
   .median();
 
 // Select the optical and thermal bands
@@ -25,19 +25,12 @@ var training = image.sampleRegions({
   scale: 30
 });
 
-// 5. Train a classifier (e.g., CART or Random Forest)
-var classifier = ee.Classifier.smileCart().train({
+// 5. Train a classifier (here a Random Forest)
+var classifier = ee.Classifier.smileRandomForest(10).train({
   features: training,
   classProperty: label,
   inputProperties: bands
 });
-
-// Alternatively, use Random Forest:
-// var classifier = ee.Classifier.smileRandomForest(10).train({
-//   features: training,
-//   classProperty: label,
-//   inputProperties: bands
-// });
 
 // 6. Classify the image
 var classified = image.classify(classifier);
