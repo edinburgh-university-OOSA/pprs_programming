@@ -7,7 +7,7 @@ function maskS2clouds(image) {  //this will filter for clouds
       .and(qa.bitwiseAnd(cirrusBitMask).eq(0));
   return image.updateMask(mask).divide(10000);
 }
-
+  
 // Load and filter a satellite image collection
 var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
          .filterDate('2026-06-01', '2026-08-21')
@@ -19,94 +19,72 @@ var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
 var bands = ['B2','B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B8A', 'B11', 'B12'];
 var image = s2.select(bands);
 
-// Load training data (FeatureCollection with a numeric 'class' property)
-var moor = /* color: #c037ff */ee.FeatureCollection(
+// Manually created polygons.
+var water = /* color: #1a0ed6 */ee.FeatureCollection(
         [ee.Feature(
             ee.Geometry.Polygon(
-                [[[-3.654362658968273, 57.15435697527349],
-                  [-3.653794030657116, 57.15220385267592],
-                  [-3.649792174806896, 57.153100032442524],
-                  [-3.653590182771984, 57.15458391873256],
-                  [-3.65443776082069, 57.154316241684754]]]),
+                [[[-3.713798485124984, 57.1647616776473],
+                  [-3.7123393634208823, 57.16117795850771],
+                  [-3.703756294573226, 57.164389359359404],
+                  [-3.7056445697197105, 57.16587861001682]]]),
+            {
+              "system:index": "0"
+            })]),
+    tree = /* color: #98ff00 */ee.FeatureCollection(
+        [ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-3.741490452201479, 57.16380537993468],
+                  [-3.7396880077434713, 57.161524812596404],
+                  [-3.7357397960735494, 57.162455673396444],
+                  [-3.735997288138979, 57.165201576234494]]]),
             {
               "system:index": "1"
             })]),
-    tree = /* color: #11bd3a */ee.FeatureCollection(
+    moor = /* color: #7831c6 */ee.FeatureCollection(
         [ee.Feature(
             ee.Geometry.Polygon(
-                [[[-3.6714843787673646, 57.15605036016949],
-                  [-3.668179897261017, 57.15321066968999],
-                  [-3.662085918379181, 57.15602708490416],
-                  [-3.6662487067702942, 57.157702866571]]]),
+                [[[-3.749558536918276, 57.166900210640236],
+                  [-3.7502451824260885, 57.16522484572613],
+                  [-3.748914806754702, 57.165201576234494],
+                  [-3.7479706691814596, 57.166388301637596],
+                  [-3.747584431083315, 57.16727250364484]]]),
             {
               "system:index": "2"
-            })]),
-    water = /* color: #7400ff */ee.FeatureCollection(
-        [ee.Feature(
-            ee.Geometry.Polygon(
-                [[[-3.7170215097972936, 57.16564903279936],
-                  [-3.7166781870433874, 57.16085526328322],
-                  [-3.7075801340648717, 57.16220502823711],
-                  [-3.7076659647533483, 57.16592826235351]]]),
-            {
-              "system:index": "3"
-            })]),
-    grass = /* color: #70ff2f */ee.FeatureCollection(
-        [ee.Feature(
-            ee.Geometry.Polygon(
-                [[[-3.6855745237304105, 57.14450858418571],
-                  [-3.6867010515166654, 57.14360637551402],
-                  [-3.6838257234527005, 57.14313488997297],
-                  [-3.6837077062560453, 57.14467156147098],
-                  [-3.684662572665347, 57.144962590552126]]]),
-            {
-              "system:index": "4"
-            })]),
-    tarmac = /* color: #909090 */ee.FeatureCollection(
-        [ee.Feature(
-            ee.Geometry.Polygon(
-                [[[-3.6626161488320252, 57.147094596431245],
-                  [-3.662594691159906, 57.14683559558513],
-                  [-3.661849037053766, 57.14669008869643],
-                  [-3.6596925410057923, 57.14648346793129],
-                  [-3.6595852526451966, 57.14672210026106],
-                  [-3.661725655439081, 57.14684723611152],
-                  [-3.6624820383812806, 57.14701602333244]]]),
-            {
-              "system:index": "5"
             })]);
 
 // Make a FeatureCollection from the hand-made geometries.
-var polygons = ee.FeatureCollection([
-  ee.Feature(moor, {'label': 0}),
-  ee.Feature(tree, {'label': 1}),
-  ee.Feature(water, {'label': 2}),
-  ee.Feature(grass, {'label': 3}),
-  ee.Feature(tarmac, {'label': 4}),
-]);
+var polygons = ee.FeatureCollection(water,tree,moor);
 
-// 4. Sample the imagery at the training point locations
+// Get the values for all pixels in each polygon in the training.
 var training = image.sampleRegions({
+  // Get the sample from the polygons FeatureCollection.
   collection: polygons,
-  properties: [label],
-  scale: 20   // at Sentinel-2's medium resolution
+  // Keep this list of properties from the polygons.
+  //properties: ['system:index'],
+  // Set the scale to get Landsat pixels in the polygons.
+  scale: 30
 });
 
-// 5. Train a classifier (here a Random Forest)
-var classifier = ee.Classifier.smileRandomForest(10).train({
-  features: training,
-  classProperty: label,
-  inputProperties: bands
+// Create an SVM classifier with custom parameters.
+var classifier = ee.Classifier.libsvm({
+  kernelType: 'RBF',
+  gamma: 0.5,
+  cost: 10
 });
 
-// 6. Classify the image
-var classified = image.classify(classifier);
+// Train the classifier.
+var trained = classifier.train(training, 'class', bands);
 
-// 1. Define your Region of Interest (ROI) or center the map
+// Classify the image.
+var classified = image.classify(trained);
+
+// Display the classification result and the input image.
 Map.setCenter(-3.728574,57.181384,13); // Center on Bagaduish
-
-// 7. Display the input composite and the classification result
-Map.addLayer(s2, {bands: ['B4', 'B3', 'B2'], min: 0, max: 0.25}, 'RGB Image');
-Map.addLayer(classified, {min: 0, max: 4, palette: ['blue', 'green', 'yellow', 'red', 'brown']}, 'Land Cover Classification');
-
+Map.addLayer(image,
+             {bands: ['B4', 'B3', 'B2'], min: 0, max: 0.25},
+             'image');
+Map.addLayer(polygons, {color: 'yellow'}, 'training polygons');
+Map.addLayer(classified,
+             {min: 0, max: 4},
+             'classification map');
 
