@@ -1,15 +1,42 @@
 // 1. Define training polygons as a FeatureCollection with a 'class' property.
 // (Alternatively, draw polygons in the Code Editor and set a 'class' property.)
-var polygons = ee.FeatureCollection([
-  ee.Feature(
-    ee.Geometry.Polygon([[[-3.21, 55.94], [-3.20, 55.94], [-3.20, 55.93], [-3.21, 55.93]]]),
-    {'class': 0} // e.g., Non-forest / Urban
-  ),
-  ee.Feature(
-    ee.Geometry.Polygon([[[-3.25, 55.95], [-3.24, 55.95], [-3.24, 55.94], [-3.25, 55.94]]]),
-    {'class': 1} // e.g., Vegetation / Forest
-  )
-]);
+var tree = /* color: #98ff00 */ee.FeatureCollection(
+        [ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-3.741490452201479, 57.16380537993468],
+                  [-3.7396880077434713, 57.161524812596404],
+                  [-3.7357397960735494, 57.162455673396444],
+                  [-3.735997288138979, 57.165201576234494]]]),
+            {
+              "class": 1,
+              "system:index": "0"
+            })]),
+    water = /* color: #0c1fff */ee.FeatureCollection(
+        [ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-3.71378149429602, 57.16531192391301],
+                  [-3.7193604890469967, 57.163124532835546],
+                  [-3.7166997377042232, 57.16070428979315],
+                  [-3.7077733461026607, 57.16112318934763],
+                  [-3.7045117799405514, 57.16456729466964],
+                  [-3.7070008699063717, 57.16656845175644]]]),
+            {
+              "class": 2,
+              "system:index": "0"
+            })]),
+    moor = /* color: #8a3eba */ee.FeatureCollection(
+        [ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-3.7498215876980145, 57.16717728984015],
+                  [-3.7504224025173505, 57.165315782533554],
+                  [-3.748362465993913, 57.16528087837642],
+                  [-3.747160836355241, 57.16752631202607]]]),
+            {
+              "class": 3,
+              "system:index": "0"
+            })]);
+
+polygons=ee.FeatureCollection(tree,water,moor)
 
 // 2. Load Sentinel-2 surface reflectance imagery and create a median composite.
 var bands = ['B2', 'B3', 'B4', 'B8'];
@@ -42,3 +69,4 @@ Map.centerObject(polygons, 12);
 Map.addLayer(image, {bands: ['B4', 'B3', 'B2'], min: 200, max: 3000}, 'RGB Composite');
 Map.addLayer(polygons, {color: 'yellow'}, 'Training Polygons');
 Map.addLayer(classified, {min: 0, max: 1, palette: ['gray', 'green']}, 'Classified Map');
+
