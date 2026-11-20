@@ -20,17 +20,22 @@ var bands = ['B2','B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B8A', 'B11', 'B12'];
 var image = s2.select(bands);
 
 // Manually created polygons.
-var forest1 = ee.Geometry.Rectangle(-63.0187, -9.3958, -62.9793, -9.3443);
-var forest2 = ee.Geometry.Rectangle(-62.8145, -9.206, -62.7688, -9.1735);
-var nonForest1 = ee.Geometry.Rectangle(-62.8161, -9.5001, -62.7921, -9.4486);
-var nonForest2 = ee.Geometry.Rectangle(-62.6788, -9.044, -62.6459, -8.9986);
+var moor = ee.Geometry.Polygon(
+                [[[-3.654362658968273, 57.15435697527349],
+                  [-3.653794030657116, 57.15220385267592],
+                  [-3.649792174806896, 57.153100032442524],
+                  [-3.653590182771984, 57.15458391873256],
+                  [-3.65443776082069, 57.154316241684754]]]),
+    tree = ee.Geometry.Polygon(
+                [[[-3.6714843787673646, 57.15605036016949],
+                  [-3.668179897261017, 57.15321066968999],
+                  [-3.662085918379181, 57.15602708490416],
+                  [-3.6662487067702942, 57.157702866571]]]);
 
 // Make a FeatureCollection from the hand-made geometries.
 var polygons = ee.FeatureCollection([
-  ee.Feature(nonForest1, {'class': 0}),
-  ee.Feature(nonForest2, {'class': 0}),
-  ee.Feature(forest1, {'class': 1}),
-  ee.Feature(forest2, {'class': 1}),
+  ee.Feature(moor, {'class': 0}),
+  ee.Feature(tree, {'class': 1}),
 ]);
 
 // Get the values for all pixels in each polygon in the training.
@@ -57,12 +62,12 @@ var trained = classifier.train(training, 'class', bands);
 var classified = image.classify(trained);
 
 // Display the classification result and the input image.
-Map.setCenter(-62.836, -9.2399, 9);
+Map.setCenter(-3.728574,57.181384,13); // Center on Bagaduish
 Map.addLayer(image,
              {bands: ['B4', 'B3', 'B2'], min: 0, max: 0.25},
              'image');
 Map.addLayer(polygons, {color: 'yellow'}, 'training polygons');
 Map.addLayer(classified,
              {min: 0, max: 1, palette: ['orange', 'green']},
-             'deforestation');
+             'classification map');
              
