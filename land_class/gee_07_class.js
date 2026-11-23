@@ -51,6 +51,16 @@ Map.addLayer(image,
 Map.addLayer(polygons, {color: 'yellow'}, 'training polygons');
 Map.addLayer(classified, {min: 1, max: 5, palette: ['blue','yellow','red', 'green','purple']}, 'Classified Image');
 
+// and save as a geotiff
+Export.image.toDrive({
+  image: classified,
+  description: 'classified',
+  folder: 'introEO',
+  fileNamePrefix: 'classified',
+  region: roi,
+  scale: 20,
+  crs: 'EPSG:32630'
+});
 
 //save the data for later use
 Export.image.toAsset({
@@ -62,13 +72,3 @@ Export.image.toAsset({
   crs: 'EPSG:32630'
 });
 
-// and save as a geotiff
-Export.image.toDrive({
-  image: classified,
-  description: 'classified',
-  folder: 'introEO',
-  fileNamePrefix: 'classified',
-  region: roi,
-  scale: 20,
-  crs: 'EPSG:32630'
-});
