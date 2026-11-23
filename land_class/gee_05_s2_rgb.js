@@ -21,6 +21,6 @@ var visualization = {
   bands: ['B4', 'B3', 'B2'],
 };
 
-Map.setCenter(-3.728574,57.181384,13); // Center on Scotland
+Map.setCenter(-3.728574,57.181384,10) // Center on Scotland
 Map.addLayer(dataset.mean(), visualization, 'RGB');
 
