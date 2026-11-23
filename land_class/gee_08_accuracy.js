@@ -1,27 +1,9 @@
+// make sure your land cover map is still in your map
+var image = classified;
 
+ee.FeatureCollection.randomPoints(classified.filter)
 
-
-// define cloud filtering function
-function maskS2clouds(image) {  //this will filter for clouds
-  var qa = image.select('QA60');
-  var cloudBitMask = 1 << 10;
-  var cirrusBitMask = 1 << 11;
-  var mask = qa.bitwiseAnd(cloudBitMask).eq(0)
-      .and(qa.bitwiseAnd(cirrusBitMask).eq(0));
-  return image.updateMask(mask).divide(10000);
-}
-  
-// Load and filter a satellite image collection
-var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
-         .filterDate('2026-06-01', '2026-08-21')
-         .filterBounds(roi)
-         // Pre-filter to get less cloudy granules.
-         .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',1))
-         .map(maskS2clouds).median();
-
-// Select the 20 m and finer res bands
-var bands = ['B2','B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B8A', 'B11', 'B12'];
-var image = s2.select(bands);
+ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',1
 
 // Make a FeatureCollection from the hand-made geometries.
 // YOU NEED TO EDIT FOR YOUR CLASS NAMES HERE
