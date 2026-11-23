@@ -34,15 +34,11 @@ var training = image.sampleRegions({
   scale: 30
 });
 
-// Create an SVM classifier with custom parameters.
-var classifier = ee.Classifier.libsvm({
-  kernelType: 'RBF',
-  gamma: 0.5,
-  cost: 10
-});
+// Define a 10-tree random forest classifier
+var  classifier = ee.Classifier.smileRandomForest(10)
 
 // Train the classifier.
-var trained = classifier.train(training, 'landcover', bands);
+var trained = classifier.train(training,'landcover', bands);
 
 // Classify the image.
 var classified = image.classify(trained);
