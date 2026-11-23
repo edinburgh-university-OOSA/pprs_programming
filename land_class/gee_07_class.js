@@ -31,7 +31,7 @@ var training = image.sampleRegions({
   // Keep this list of properties from the polygons.
   properties: ['landcover'],
   // Set the scale to get Landsat pixels in the polygons.
-  scale: 30
+  scale: 20
 });
 
 // Define a 10-tree random forest classifier
@@ -51,4 +51,13 @@ Map.addLayer(image,
 Map.addLayer(polygons, {color: 'yellow'}, 'training polygons');
 Map.addLayer(classified, {min: 1, max: 5, palette: ['blue','yellow','red', 'green','purple']}, 'Classified Image');
 
-
+//save the data for later use
+Export.image.toDrive({
+  image: image,
+  description: 'classified',
+  folder: 'introEO',
+  fileNamePrefix: 'classified',
+  region: roi,
+  scale: 20,
+  crs: 'EPSG:32630'
+});
